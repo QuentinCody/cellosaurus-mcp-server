@@ -1,5 +1,6 @@
 import type { McpServer } from "@bio-mcp/shared/mcp";
 import { z } from "zod";
+import { cellosaurusResponse } from "../lib/tool-result";
 import { createGetSchemaHandler } from "@bio-mcp/shared/staging/utils";
 
 interface SchemaEnv {
@@ -9,8 +10,8 @@ interface SchemaEnv {
 export function registerGetSchema(server: McpServer, env?: SchemaEnv): void {
     const handler = createGetSchemaHandler("CELLOSAURUS_DATA_DO", "cellosaurus");
 
-    server.registerTool(
-        "cellosaurus_get_schema",
+    for (const name of ["cellosaurus_get_schema", "mcp_cellosaurus_get_schema"]) server.registerTool(
+        name,
         {
             title: "Get Staged Data Schema",
             description:
@@ -24,11 +25,11 @@ export function registerGetSchema(server: McpServer, env?: SchemaEnv): void {
         },
         async (args, extra) => {
             const runtimeEnv = env || (extra as { env?: SchemaEnv })?.env || {};
-            return handler(
+            return cellosaurusResponse(() => handler(
                 args as Record<string, unknown>,
                 runtimeEnv as Record<string, unknown>,
                 (extra as Record<string, unknown>),
-            );
+            ), runtimeEnv, name, extra, args);
         },
     );
 }

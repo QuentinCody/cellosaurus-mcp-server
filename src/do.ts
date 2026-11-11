@@ -11,7 +11,7 @@ import type { SchemaHints } from "@bio-mcp/shared/staging/schema-inference";
  * sequence-variation-list, str-list, ...), so a well-annotated line — e.g. HeLa
  * (CVCL_0030) ≈ 450 KB or Caco-2 (CVCL_0025) ≈ 130 KB (compact JSON, verified
  * live) — far exceeds the 30 KB inline threshold and auto-stages; the
- * consolidated engine extracts those child arrays into their own SQLite tables
+ * staging engine extracts those child arrays into their own SQLite tables
  * joined by parent_id.
  *
  * We only force a `cell_lines` table name when `cell-line-list` is the SOLE
@@ -26,6 +26,11 @@ import type { SchemaHints } from "@bio-mcp/shared/staging/schema-inference";
  * would abort the staging transaction).
  */
 export class CellosaurusDataDO extends RestStagingDO {
+    protected getTabularData(data: unknown): unknown {
+        if (data && typeof data === "object" && !Array.isArray(data) && "Cellosaurus" in data) return data.Cellosaurus;
+        return data;
+    }
+
     protected getSchemaHints(data: unknown): SchemaHints | undefined {
         if (!data || typeof data !== "object" || Array.isArray(data)) return undefined;
 

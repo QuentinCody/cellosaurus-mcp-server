@@ -93,9 +93,9 @@ const httpContent = readFile('src/lib/http.ts');
 assertContains('src/lib/http.ts', httpContent, 'api.cellosaurus.org', 'http.ts targets the Cellosaurus base URL');
 assertContains('src/lib/http.ts', httpContent, 'Accept', 'http.ts sets Accept header (JSON)');
 
-const adapterContent = readFile('src/lib/api-adapter.ts');
-assertContains('src/lib/api-adapter.ts', adapterContent, 'content-type', 'api-adapter checks content-type');
-assertContains('src/lib/api-adapter.ts', adapterContent, 'text', 'api-adapter surfaces non-JSON as { text }');
+const adapterContent = readFile('src/lib/http.ts');
+assertContains('src/lib/api-adapter.ts', adapterContent, 'content-type', 'http reader checks content-type');
+assertContains('src/lib/api-adapter.ts', adapterContent, 'text', 'http reader surfaces non-JSON as { text }');
 
 // do.ts staging hints must unwrap the Cellosaurus envelope
 const doContent = readFile('src/do.ts');

@@ -17,9 +17,9 @@ describe("cellosaurusCatalog (smoke)", () => {
         expect(cellosaurusCatalog.endpointCount).toBe(cellosaurusCatalog.endpoints.length);
     });
 
-    it("exposes exactly the three verified GET endpoints, all covered by the search tool", () => {
+    it("exposes the three native GET endpoints and local context helper, all covered by the search tool", () => {
         const paths = cellosaurusCatalog.endpoints.map((e) => e.path).sort();
-        expect(paths).toEqual(["/cell-line/{ac}", "/release-info", "/search/cell-line"]);
+        expect(paths).toEqual(["/cell-line/{ac}", "/cell-line/{ac}/context", "/release-info", "/search/cell-line"]);
         for (const e of cellosaurusCatalog.endpoints) {
             expect(e.method).toBe("GET");
             expect(e.coveredByTool).toBe("cellosaurus_search");
@@ -38,8 +38,9 @@ describe("cellosaurusCatalog (smoke)", () => {
         expect(search?.queryParams?.some((p) => p.name === "q")).toBe(true);
     });
 
-    it("every endpoint accepts the format param with the json/xml/txt/tsv enum", () => {
+    it("every native endpoint accepts the format param with the json/xml/txt/tsv enum", () => {
         for (const e of cellosaurusCatalog.endpoints) {
+            if (e.path.endsWith("/context")) continue;
             const format = e.queryParams?.find((p) => p.name === "format");
             expect(format, `format missing on ${e.path}`).toBeDefined();
             expect(format?.enum).toEqual(["json", "xml", "txt", "tsv"]);

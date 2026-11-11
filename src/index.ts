@@ -9,8 +9,8 @@ import { CellosaurusDataDO } from "./do";
 export { CellosaurusDataDO };
 
 interface CellosaurusEnv {
-    CELLOSAURUS_DATA_DO: DurableObjectNamespace;
-    CODE_MODE_LOADER: WorkerLoader;
+    CELLOSAURUS_DATA_DO: Env["CELLOSAURUS_DATA_DO"];
+    CODE_MODE_LOADER: Env["CODE_MODE_LOADER"];
 }
 
 export class MyMCP extends StatelessMcpWorker {
